@@ -1,4 +1,4 @@
-package com.mpmd.missionPossible;
+package com.mpmd.mi.event.consumer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
