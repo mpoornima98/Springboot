@@ -7,8 +7,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(NullValueException.class)
-    public ResponseEntity<String> handleNullValueException(NullValueException e){
+    @ExceptionHandler(NoEventNameOrIdException.class)
+    public ResponseEntity<String> handleNullValueException(NoEventNameOrIdException e){
         return ResponseEntity.badRequest().body(e.getMessage());
     }
-}
+
+    @ExceptionHandler(EmptyEventException.class)
+    public ResponseEntity<String> handleEmptyEventException(EmptyEventException e){
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }}

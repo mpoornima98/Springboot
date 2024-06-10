@@ -9,10 +9,10 @@ import java.util.List;
 @Getter
 @Setter
 public class EventDetails {
-    @JsonProperty("Event_Name")
-    String EventName;
-    @JsonProperty("Event_ID")
-    String EventID;
+    @JsonProperty("eventName")
+    private String eventName;
+    @JsonProperty("eventID")
+    private String eventID;
 
    // List<SessionDetails> sessionDetails;
 }

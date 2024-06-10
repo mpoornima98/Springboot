@@ -15,24 +15,31 @@ import java.util.List;
 @Repository
 public class EventRepository {
 
-    @Value("${EventFile}")
+    @Value("${application.eventFile}")
     private String eventFile;
     ObjectMapper objectMapper = new ObjectMapper();
-    List<EventDetails> eventDetails= new ArrayList<EventDetails>();
+
 
     public void addEvent(EventDetails eventDetail) throws IOException {
-        eventDetails = events();
-        eventDetails.add(eventDetail);
+        List<EventDetails> eventDetailsList = new ArrayList<EventDetails>();
+        if (!isFileEmpty()){
+            eventDetailsList = events();
+        }
+        eventDetailsList.add(eventDetail);
         objectMapper.writerWithDefaultPrettyPrinter()
-                .writeValue(new File(eventFile),eventDetails);
+                .writeValue(new File(eventFile),eventDetailsList);
     }
 
-    public List<EventDetails> events() throws IOException {
-        if(Files.size(Paths.get(eventFile))==0){
-            return eventDetails;
-        }
-      eventDetails = objectMapper.readValue(new File(eventFile)
+    private List<EventDetails> events() throws IOException {
+        return objectMapper.readValue(new File(eventFile)
               , new TypeReference<List<EventDetails>>(){});
-        return eventDetails;
+    }
+
+    private boolean isFileEmpty() throws IOException {
+        if(Files.size(Paths.get(eventFile))==0){
+            return true;
+        }
+        return false;
     }
 }
+
