@@ -2,7 +2,7 @@ package com.mpmd.mi.event.consumer.controller;
 
 
 import com.mpmd.mi.event.consumer.exception.EmptyEventException;
-import com.mpmd.mi.event.consumer.exception.NotValidInputException;
+import com.mpmd.mi.event.consumer.exception.InValidInputException;
 import com.mpmd.mi.event.consumer.model.EventDetails;
 import com.mpmd.mi.event.consumer.service.EventServiceImpl;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ public class EventController {
         }
         if(eventDetail.getEventID()==null || eventDetail.getEventName() == null) {
             logger.error("Either Event ID or Name is not provided",
-                    new NotValidInputException("Either Event ID or Name is not provided"));
+                    new InValidInputException("Either Event ID or Name is not provided"));
             return ResponseEntity.badRequest().body("Either Event ID or Name is not provided");
         }
 
