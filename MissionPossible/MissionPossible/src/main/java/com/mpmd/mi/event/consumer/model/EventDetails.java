@@ -1,8 +1,8 @@
 package com.mpmd.mi.event.consumer.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Transient;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 import java.util.List;
 
@@ -13,6 +13,8 @@ public class EventDetails {
     private String eventName;
     @JsonProperty("eventID")
     private String eventID;
+    @Transient
+    private List<String> courseMaterials;
 
    // List<SessionDetails> sessionDetails;
 }

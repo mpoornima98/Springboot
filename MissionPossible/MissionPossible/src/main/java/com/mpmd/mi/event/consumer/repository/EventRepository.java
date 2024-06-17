@@ -1,6 +1,7 @@
 package com.mpmd.mi.event.consumer.repository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mpmd.mi.event.consumer.exception.InValidInputException;
 import com.mpmd.mi.event.consumer.model.EventDetails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -24,7 +25,13 @@ public class EventRepository {
         List<EventDetails> eventDetailsList = new ArrayList<EventDetails>();
         if (!isFileEmpty()){
             eventDetailsList = events();
+            for (EventDetails event : eventDetailsList) {
+                if(eventDetail.getEventID().equals(event.getEventID())){
+                    throw new InValidInputException("Existing user");
+                }
+            }
         }
+
         eventDetailsList.add(eventDetail);
         objectMapper.writerWithDefaultPrettyPrinter()
                 .writeValue(new File(eventFile),eventDetailsList);
