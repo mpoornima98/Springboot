@@ -1,4 +1,4 @@
-package com.mpmd.mi.event.consumer.model;
+package com.mpmd.mi.event.consumer.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

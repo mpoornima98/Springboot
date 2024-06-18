@@ -1,7 +1,7 @@
 package com.mpmd.mi.event.consumer.controller;
 
 import com.mpmd.mi.event.consumer.exception.InValidInputException;
-import com.mpmd.mi.event.consumer.model.UserData;
+import com.mpmd.mi.event.consumer.entity.UserData;
 import com.mpmd.mi.event.consumer.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

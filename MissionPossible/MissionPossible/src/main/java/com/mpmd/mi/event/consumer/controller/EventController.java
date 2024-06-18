@@ -3,6 +3,7 @@ package com.mpmd.mi.event.consumer.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mpmd.mi.event.consumer.exception.InValidInputException;
+import com.mpmd.mi.event.consumer.model.ApiResponse;
 import com.mpmd.mi.event.consumer.model.EventDetails;
 import com.mpmd.mi.event.consumer.service.EventServiceImpl;
 import org.slf4j.LoggerFactory;
@@ -13,13 +14,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/event")
-public class EventController {
+public class
+EventController {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(EventController.class);
     @Autowired
     EventServiceImpl eventService;
@@ -30,7 +31,7 @@ public class EventController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> addEvent(@RequestParam("eventDetails") String eventDetail, @RequestParam(name = "files", required = false) List<MultipartFile> multipartFiles)
+    public ResponseEntity<ApiResponse> addEvent(@RequestParam("eventDetails") String eventDetail, @RequestParam(name = "files", required = false) List<MultipartFile> multipartFiles)
             throws IOException {
 
         EventDetails details = new ObjectMapper().readValue(eventDetail,EventDetails.class);
@@ -38,14 +39,14 @@ public class EventController {
         if(details.getEventID()==null || details.getEventName() == null) {
             logger.error("Either Event ID or Name is not provided",
                     new InValidInputException("Either Event ID or Name is not provided"));
-            return ResponseEntity.badRequest().body("Either Event ID or Name is not provided");
+
+            return ResponseEntity.badRequest().body(new ApiResponse("Event ID or Name is not provided",null,false));
         }
         if(ObjectUtils.isEmpty(multipartFiles)) {
             logger.debug("Files are not provided");
         }
-        eventService.addEvent(details,multipartFiles);
-        logger.info("Event added successfully");
-        return ResponseEntity.ok("Added successfully");
+        logger.info("Adding event");
+        return ResponseEntity.ok(eventService.addEvent(details,multipartFiles));
     }
 
     @PostMapping("/upload")

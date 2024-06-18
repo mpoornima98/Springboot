@@ -1,7 +1,7 @@
 package com.mpmd.mi.event.consumer.service;
 
 import com.mpmd.mi.event.consumer.exception.NoSuchDataException;
-import com.mpmd.mi.event.consumer.model.UserData;
+import com.mpmd.mi.event.consumer.entity.UserData;
 import com.mpmd.mi.event.consumer.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;

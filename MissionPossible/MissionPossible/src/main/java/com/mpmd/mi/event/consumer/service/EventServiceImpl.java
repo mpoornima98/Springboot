@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.util.IOUtils;
 import com.mpmd.mi.event.consumer.controller.EventController;
+import com.mpmd.mi.event.consumer.model.ApiResponse;
 import com.mpmd.mi.event.consumer.model.EventDetails;
 import com.mpmd.mi.event.consumer.repository.EventRepository;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public void addEvent(EventDetails eventDetails, List<MultipartFile> multipartFiles) throws IOException {
+    public ApiResponse addEvent(EventDetails eventDetails, List<MultipartFile> multipartFiles) throws IOException {
 
         if(multipartFiles.size() != 0) {
             List<String> fileNames = new ArrayList<String>();
@@ -44,17 +45,26 @@ public class EventServiceImpl implements EventService {
                 uploadFile(file);
                 fileNames.add(file.getOriginalFilename());
                 logger.info(file.getOriginalFilename()+ " added successfully to aws s3") ;
-
             }
+            logger.info("Setting course material");
             eventDetails.setCourseMaterials(fileNames);
         }
-
-        eventRepository.addEvent(eventDetails);
+        try{
+            eventRepository.addEvent(eventDetails);
+            logger.info("Event added successfully");
+            return new ApiResponse(eventDetails.getEventID()+" Event is added successfully",
+                    eventDetails,true);
+        }
+        catch (Exception e){
+            logger.info("Event is not added");
+            return new ApiResponse(eventDetails.getEventID()+" Event is not added",
+                    eventDetails,false);
+        }
     }
-
 
     @Override
     public String uploadFile(MultipartFile multipartFile) throws IOException {
+        logger.info("Converting file");
         File convertedFile = new File(multipartFile.getOriginalFilename());
 //      Transferring content to the converted file
 //      1. Using transferTo method in MultiPartFileInterface
@@ -62,24 +72,26 @@ public class EventServiceImpl implements EventService {
 
 //      2. Using FileOutputStream method
         FileOutputStream fos = new FileOutputStream(convertedFile);
+        logger.info("Writing");
         fos.write(multipartFile.getBytes());
         fos.close();
+        logger.debug("Storing object into s3 bucket");
         PutObjectResult putObjectResult = s3.putObject(bucketName,multipartFile.getOriginalFilename(),convertedFile);
+        logger.debug("Storing object into s3 bucket");
         return putObjectResult.getContentMd5();
     }
 
     @Override
-    public List<String> uploadFiles(List<MultipartFile> files) throws IOException {
-        return null;
-    }
-
-    @Override
     public void deleteFile(String fileName) {
+        logger.debug("Deleting... file from s3 bucket");
         s3.deleteObject(bucketName,fileName);
+        logger.info("Deleted the file "+fileName);
     }
 
     @Override
+
     public byte[] downloadFile(String fileName){
+        logger.debug("Getting object from s3 bucket");
         S3Object s3Object = s3.getObject(bucketName,fileName);
         try{
             return IOUtils.toByteArray(s3Object.getObjectContent());

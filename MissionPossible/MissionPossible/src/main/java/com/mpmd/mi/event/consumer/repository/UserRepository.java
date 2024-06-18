@@ -1,6 +1,6 @@
 package com.mpmd.mi.event.consumer.repository;
 
-import com.mpmd.mi.event.consumer.model.UserData;
+import com.mpmd.mi.event.consumer.entity.UserData;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
